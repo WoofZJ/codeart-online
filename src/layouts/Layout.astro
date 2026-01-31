@@ -1,18 +1,25 @@
 ---
 import "../assets/app.css";
+import Header from "../components/Header.astro";
+
+interface Props {
+	title: string;
+}
+
+const { title } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="zh-Hans">
+<html lang="zh-Hans" data-theme="cupcake">
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
+		<link rel="icon" type="image/png" href="/favicon.png" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
+		<title>CodeArt.Online - {title}</title>
 	</head>
-	<body>
+	<body class="container mx-auto">
+		<Header />
 		<slot />
 	</body>
 </html>
