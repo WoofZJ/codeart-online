@@ -1,0 +1,79 @@
+---
+import { Icon } from "astro-icon/components";
+
+interface Link {
+  title: string;
+  url: string;
+  icon: string;
+}
+
+const links: Link[] = [
+  { title: "首页", url: "/", icon: "tabler:home" },
+  { title: "标签", url: "/tags", icon: "tabler:tags" },
+  { title: "归档", url: "/archives", icon: "tabler:archive" },
+];
+---
+
+<div class="navbar bg-base-200 shadow-sm">
+  <div class="navbar-start">
+    <div class="dropdown">
+      <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-5 w-5"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M4 6h16M4 12h8m-8 6h16"></path>
+        </svg>
+      </div>
+      <ul
+        tabindex="-1"
+        class="menu dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
+      >
+        {
+          links.map((link) => (
+            <li>
+              <a
+                href={link.url}
+                class:list={{ "text-error": link.url === Astro.url.pathname }}
+              >
+                <Icon size="20" name={link.icon} />
+                {link.title}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+    <a class="btn btn-ghost text-xl">
+      <img class="h-full" src="/favicon.png" />
+      <span> CodeArt.Online </span>
+    </a>
+  </div>
+  <div class="navbar-center hidden lg:flex">
+    <ul class="menu text-base py-0 menu-horizontal px-1">
+      {
+        links.map((link) => (
+          <li>
+            <a
+              href={link.url}
+              class:list={{ "text-error": link.url === Astro.url.pathname }}
+            >
+              <Icon size="20" name={link.icon} />
+              {link.title}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+  <div class="navbar-end">
+    <a class="btn">登录</a>
+  </div>
+</div>
