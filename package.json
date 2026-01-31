@@ -14,10 +14,12 @@
 		"@astrojs/cloudflare": "^12.6.5",
 		"@tailwindcss/vite": "^4.1.18",
 		"astro": "^5.17.1",
+		"astro-icon": "^1.1.5",
 		"daisyui": "^5.5.14",
 		"tailwindcss": "^4.1.18"
 	},
 	"devDependencies": {
+		"@iconify-json/tabler": "^1.2.26",
 		"@types/node": "^25.1.0",
 		"wrangler": "^4.61.1"
 	}
