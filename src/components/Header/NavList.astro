@@ -1,0 +1,61 @@
+---
+import { Icon } from "astro-icon/components";
+
+interface Link {
+  title: string;
+  url: string;
+  icon: string;
+}
+
+const links: Link[] = [
+  { title: "首页", url: "/", icon: "tabler:home" },
+  { title: "归档", url: "/archives", icon: "tabler:archive" },
+  { title: "留言", url: "/messages", icon: "tabler:at" },
+  { title: "外链", url: "/links", icon: "tabler:link" },
+  { title: "关于", url: "/about", icon: "tabler:info-circle" },
+];
+
+interface Props {
+  dropdown?: boolean;
+}
+
+const { dropdown = false } = Astro.props;
+---
+
+{
+  !dropdown && (
+    <ul class="menu text-base py-0 menu-horizontal px-1">
+      {links.map((link) => (
+        <li>
+          <a
+            href={link.url}
+            class:list={{ "text-error": link.url === Astro.url.pathname }}
+          >
+            <Icon size="20" name={link.icon} />
+            {link.title}
+          </a>
+        </li>
+      ))}
+    </ul>
+  )
+}
+{
+  dropdown && (
+    <ul
+      tabindex="-1"
+      class="menu dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
+    >
+      {links.map((link) => (
+        <li>
+          <a
+            href={link.url}
+            class:list={{ "text-error": link.url === Astro.url.pathname }}
+          >
+            <Icon size="20" name={link.icon} />
+            {link.title}
+          </a>
+        </li>
+      ))}
+    </ul>
+  )
+}
