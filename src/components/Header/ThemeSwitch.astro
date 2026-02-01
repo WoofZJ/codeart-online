@@ -1,0 +1,19 @@
+---
+import { Icon } from "astro-icon/components";
+---
+
+<label class="toggle w-12 h-7 text-base-content">
+  <input id="theme-switch" type="checkbox" class="theme-controller" />
+  <Icon name="tabler:sun" size="20" />
+  <Icon name="tabler:moon" size="20" />
+</label>
+
+<script>
+  const input = document.getElementById("theme-switch") as HTMLInputElement;
+  input.checked = localStorage.getItem("theme") === "dark";
+  input.addEventListener("change", () => {
+    const theme = input.checked ? "dark" : "cupcake";
+    document.documentElement.setAttribute("data-theme", theme);
+    localStorage.setItem("theme", theme);
+  });
+</script>
