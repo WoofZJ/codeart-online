@@ -1,0 +1,54 @@
+---
+import { Icon } from "astro-icon/components";
+
+interface Props {
+  utcDate: Date;
+  tzOffset?: number;
+  showDate?: boolean;
+  showTime?: boolean;
+  showTz?: boolean;
+}
+
+const {
+  utcDate,
+  tzOffset = 8,
+  showDate = true,
+  showTime = true,
+  showTz = true,
+} = Astro.props;
+const localDate = new Date(utcDate.getTime() + tzOffset * 60 * 60 * 1000);
+const year = localDate.getUTCFullYear();
+const month = String(localDate.getUTCMonth() + 1).padStart(2, "0");
+const day = String(localDate.getUTCDate()).padStart(2, "0");
+const hours = String(localDate.getUTCHours()).padStart(2, "0");
+const minutes = String(localDate.getUTCMinutes()).padStart(2, "0");
+const seconds = String(localDate.getUTCSeconds()).padStart(2, "0");
+---
+
+<div>
+  {
+    showDate && (
+      <span class="badge gap-0.5 px-2">
+        <Icon name="tabler:calendar-month" />
+        {year}-{month}-{day}
+      </span>
+    )
+  }
+  {
+    showTime && (
+      <span class="badge gap-0.5 px-2">
+        <Icon name="tabler:clock-24" />
+        {hours}:{minutes}:{seconds}
+      </span>
+    )
+  }
+  {
+    showTz && (
+      <span class="badge gap-0.5 px-2">
+        <Icon name="tabler:timezone" />
+        {tzOffset >= 0 ? "+" : "-"}
+        {Math.abs(tzOffset).toString().padStart(2, "0")}:00
+      </span>
+    )
+  }
+</div>
