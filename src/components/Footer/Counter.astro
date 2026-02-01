@@ -1,0 +1,66 @@
+<div class="grid auto-cols-max grid-flow-col gap-2 text-center">
+  {
+    ["年", "天", "时", "分", "秒"].map((label) => (
+      <div class="bg-neutral rounded-box text-neutral-content flex flex-col p-2">
+        <span class="countdown font-mono text-3xl">
+          <span style={`--value:0; --digits:${label == "天" ? 3 : 2};`} />
+        </span>
+        {label}
+      </div>
+    ))
+  }
+</div>
+<script>
+  const launchDate = new Date("2025-07-05");
+  const milliseconds = Date.now() - launchDate.getTime();
+  let secs = Math.floor(milliseconds / 1000);
+  let mins = Math.floor(secs / 60);
+  let hours = Math.floor(mins / 60);
+  let days = Math.floor(hours / 24);
+  let years = Math.floor(days / 365);
+  [secs, mins, hours, days] = [secs % 60, mins % 60, hours % 24, days % 365];
+  setInterval(() => {
+    secs += 1;
+    if (secs >= 60) {
+      secs = 0;
+      mins += 1;
+      if (mins >= 60) {
+        mins = 0;
+        hours += 1;
+        if (hours >= 24) {
+          hours = 0;
+          days += 1;
+        }
+        if (days >= 365) {
+          days = 0;
+          years += 1;
+        }
+      }
+    }
+    updateCountdown();
+  }, 1000);
+  const updateCountdown = () => {
+    document.querySelectorAll(".countdown > span").forEach((el, index) => {
+      const element = el as HTMLElement;
+      let value = 0;
+      switch (index) {
+        case 0:
+          value = years;
+          break;
+        case 1:
+          value = days;
+          break;
+        case 2:
+          value = hours;
+          break;
+        case 3:
+          value = mins;
+          break;
+        case 4:
+          value = secs;
+          break;
+      }
+      element.style.setProperty("--value", value.toString());
+    });
+  };
+</script>
