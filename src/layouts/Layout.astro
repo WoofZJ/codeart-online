@@ -1,6 +1,7 @@
 ---
 import "../assets/app.css";
 import Header from "../components/Header.astro";
+import Footer from "../components/Footer/Footer.astro";
 
 interface Props {
 	title: string;
@@ -18,8 +19,11 @@ const { title } = Astro.props;
 		<meta name="generator" content={Astro.generator} />
 		<title>CodeArt.Online - {title}</title>
 	</head>
-	<body class="container mx-auto">
+	<body class="container min-h-dvh flex flex-col mx-auto gap-4">
 		<Header />
-		<slot />
+		<main class="grow">
+			<slot />
+		</main>
+		<Footer />
 	</body>
 </html>
