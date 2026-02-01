@@ -1,0 +1,35 @@
+---
+import { Icon } from "astro-icon/components";
+
+interface SocialLink {
+  title: string;
+  url: string;
+  icon: string;
+}
+
+const socialLinks: SocialLink[] = [
+  {
+    title: "GitHub",
+    url: "https://github.com/WoofZJ",
+    icon: "tabler:brand-github",
+  },
+  {
+    title: "Mail",
+    url: "mailto:me@woofzj.com",
+    icon: "tabler:mail",
+  },
+];
+---
+
+<ul class="flex flex-row gap-4 items-center justify-center">
+  {
+    socialLinks.map((link) => (
+      <li>
+        <a href={link.url} class="flex flex-col items-center hover:text-error">
+          <Icon size="32" name={link.icon} />
+          <span>{link.title}</span>
+        </a>
+      </li>
+    ))
+  }
+</ul>
