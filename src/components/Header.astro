@@ -9,8 +9,10 @@ interface Link {
 
 const links: Link[] = [
   { title: "首页", url: "/", icon: "tabler:home" },
-  { title: "标签", url: "/tags", icon: "tabler:tags" },
   { title: "归档", url: "/archives", icon: "tabler:archive" },
+  { title: "留言", url: "/messages", icon: "tabler:at" },
+  { title: "外链", url: "/links", icon: "tabler:link" },
+  { title: "关于", url: "/about", icon: "tabler:info-circle" },
 ];
 ---
 
@@ -51,8 +53,8 @@ const links: Link[] = [
         }
       </ul>
     </div>
-    <a class="btn btn-ghost text-xl">
-      <img class="h-full" src="/favicon.png" />
+    <a href="/" class="btn btn-ghost text-xl">
+      <img class="h-full" src="/favicon.png" alt="logo" />
       <span> CodeArt.Online </span>
     </a>
   </div>
@@ -74,6 +76,6 @@ const links: Link[] = [
     </ul>
   </div>
   <div class="navbar-end">
-    <a class="btn">登录</a>
+    <a href="/login" class="btn">登录</a>
   </div>
 </div>
