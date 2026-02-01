@@ -19,26 +19,6 @@
   let days = Math.floor(hours / 24);
   let years = Math.floor(days / 365);
   [secs, mins, hours, days] = [secs % 60, mins % 60, hours % 24, days % 365];
-  setInterval(() => {
-    secs += 1;
-    if (secs >= 60) {
-      secs = 0;
-      mins += 1;
-      if (mins >= 60) {
-        mins = 0;
-        hours += 1;
-        if (hours >= 24) {
-          hours = 0;
-          days += 1;
-        }
-        if (days >= 365) {
-          days = 0;
-          years += 1;
-        }
-      }
-    }
-    updateCountdown();
-  }, 1000);
   const updateCountdown = () => {
     document.querySelectorAll(".countdown > span").forEach((el, index) => {
       const element = el as HTMLElement;
@@ -63,4 +43,25 @@
       element.style.setProperty("--value", value.toString());
     });
   };
+  updateCountdown();
+  setInterval(() => {
+    secs += 1;
+    if (secs >= 60) {
+      secs = 0;
+      mins += 1;
+      if (mins >= 60) {
+        mins = 0;
+        hours += 1;
+        if (hours >= 24) {
+          hours = 0;
+          days += 1;
+        }
+        if (days >= 365) {
+          days = 0;
+          years += 1;
+        }
+      }
+    }
+    updateCountdown();
+  }, 1000);
 </script>
