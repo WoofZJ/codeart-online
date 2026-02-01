@@ -3,6 +3,7 @@ interface poweredByItem {
   name: string;
   url: string;
   logo: string;
+  logoDark?: string;
 }
 
 const poweredBy: poweredByItem[] = [
@@ -20,6 +21,7 @@ const poweredBy: poweredByItem[] = [
     name: "Astro",
     url: "https://astro.build/",
     logo: "/images/logos/astro-dark.svg",
+    logoDark: "/images/logos/astro-light.svg",
   },
   {
     name: "Cloudflare Workers®",
@@ -37,10 +39,58 @@ const poweredBy: poweredByItem[] = [
           class="flex flex-row items-center bg-base-300 rounded-xl px-3 py-2 gap-1.5 hover:text-error"
           href={item.url}
         >
-          <img src={item.logo} alt={item.name} width="24" />
+          <img
+            src={item.logo}
+            data-src-light={item.logo}
+            data-src-dark={item.logoDark}
+            alt={item.name}
+            width="24"
+            class="powered-by-logo"
+          />
           <span class="font-bold text-base">{item.name}</span>
         </a>
       </li>
     ))
   }
 </ul>
+
+<script>
+  function updateLogos() {
+    const theme = document.documentElement.getAttribute("data-theme");
+    const isDark = theme === "dark";
+    const logos = document.querySelectorAll(
+      "img.powered-by-logo",
+    ) as NodeListOf<HTMLImageElement>;
+
+    logos.forEach((img) => {
+      const srcLight = img.getAttribute("data-src-light");
+      const srcDark = img.getAttribute("data-src-dark");
+
+      if (isDark && srcDark) {
+        img.src = srcDark;
+      } else if (srcLight) {
+        img.src = srcLight;
+      }
+    });
+  }
+
+  // Monitor theme changes
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      if (
+        mutation.type === "attributes" &&
+        mutation.attributeName === "data-theme"
+      ) {
+        updateLogos();
+      }
+    });
+  });
+
+  observer.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ["data-theme"],
+  });
+
+  // Initial update
+  updateLogos();
+</script>
