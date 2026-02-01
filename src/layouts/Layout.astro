@@ -1,6 +1,6 @@
 ---
 import "../assets/app.css";
-import Header from "../components/Header.astro";
+import Header from "../components/Header/Header.astro";
 import Footer from "../components/Footer/Footer.astro";
 
 interface Props {
@@ -18,6 +18,12 @@ const { title } = Astro.props;
 		<link rel="icon" type="image/png" href="/favicon.png" />
 		<meta name="generator" content={Astro.generator} />
 		<title>CodeArt.Online - {title}</title>
+		<script is:inline>
+			const theme = localStorage.getItem("theme");
+			if (theme) {
+				document.documentElement.setAttribute("data-theme", theme);
+			}
+		</script>
 	</head>
 	<body class="container min-h-dvh flex flex-col mx-auto gap-4">
 		<Header />
