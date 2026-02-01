@@ -1,0 +1,46 @@
+---
+interface poweredByItem {
+  name: string;
+  url: string;
+  logo: string;
+}
+
+const poweredBy: poweredByItem[] = [
+  {
+    name: "Tailwind CSS",
+    url: "https://tailwindcss.com/",
+    logo: "/images/logos/tailwindcss.svg",
+  },
+  {
+    name: "daisyUI",
+    url: "https://daisyui.com/",
+    logo: "/images/logos/daisyUI.svg",
+  },
+  {
+    name: "Astro",
+    url: "https://astro.build/",
+    logo: "/images/logos/astro-dark.svg",
+  },
+  {
+    name: "Cloudflare Workers®",
+    url: "https://workers.cloudflare.com/",
+    logo: "/images/logos/CloudflareWorkers.svg",
+  },
+];
+---
+
+<ul class="flex flex-row gap-4 items-center flex-wrap justify-center">
+  {
+    poweredBy.map((item) => (
+      <li>
+        <a
+          class="flex flex-row items-center bg-base-300 rounded-xl px-3 py-2 gap-1.5 hover:text-error"
+          href={item.url}
+        >
+          <img src={item.logo} alt={item.name} width="24" />
+          <span class="font-bold text-base">{item.name}</span>
+        </a>
+      </li>
+    ))
+  }
+</ul>
