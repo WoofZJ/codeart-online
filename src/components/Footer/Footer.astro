@@ -4,6 +4,7 @@ import Counter from "./Counter.astro";
 import SocialLinks from "./SocialLinks.astro";
 import PoweredByList from "./PoweredByList.astro";
 import VisitStats from "./VisitStats.astro";
+import VisitStatsUI from "./VisitStatsUI.astro";
 ---
 
 <footer
@@ -34,6 +35,8 @@ import VisitStats from "./VisitStats.astro";
     </aside>
   </div>
   <div class="flex flex-col flex-1/3 items-center gap-2 order-1 lg:order-3">
-    <VisitStats />
+    <VisitStats server:defer>
+      <VisitStatsUI slot="fallback" />
+    </VisitStats>
   </div>
 </footer>
