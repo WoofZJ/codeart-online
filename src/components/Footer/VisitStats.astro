@@ -1,36 +1,58 @@
 ---
+export const prerender = false;
 
+import VisitStatsUI from "./VisitStatsUI.astro";
+import { getUserId } from "../../scripts/session";
+
+const DB = Astro.locals.runtime.env.DB;
+
+// record visit
+const userId = getUserId(Astro.cookies);
+const origin = Astro.request.headers.get("Origin") || "";
+const url = new URL(Astro.request.url);
+const referer = Astro.request.headers.get("Referer") || "";
+const userAgent = Astro.request.headers.get("User-Agent") || "";
+
+await DB.prepare(
+  `INSERT INTO Visits (UserId, Origin, Pathname, Search, Referer, UserAgent)
+   VALUES (?, ?, ?, ?, ?, ?)`,
+)
+  .bind(userId, origin, url.pathname, url.search, referer, userAgent)
+  .run();
+
+// get visit stats
+const thisMonth =
+  new Date(new Date().getFullYear(), new Date().getMonth(), 1).getTime() / 1000;
+
+const result = (await DB.prepare(
+  `SELECT
+     (SELECT COUNT(*) FROM Visits WHERE Pathname = ?) AS PageVisits,
+     (SELECT COUNT(*) FROM Visits
+        WHERE Pathname = ? AND VisitTime >= ?
+     ) AS MonthlyPageVisits,
+     (SELECT COUNT(*) FROM Visits) AS SiteVisits,
+     (SELECT COUNT(*) FROM Visits
+        WHERE VisitTime >= ?
+     ) AS MonthlySiteVisits,
+     (SELECT COUNT(DISTINCT UserId) FROM Visits) AS SiteVisitors,
+     (SELECT COUNT(DISTINCT UserId) FROM Visits
+        WHERE VisitTime >= ?
+     ) AS MonthlySiteVisitors
+   `,
+)
+  .bind(url.pathname, url.pathname, thisMonth, thisMonth, thisMonth)
+  .first()) as {
+  PageVisits: number;
+  MonthlyPageVisits: number;
+  SiteVisits: number;
+  MonthlySiteVisits: number;
+  SiteVisitors: number;
+  MonthlySiteVisitors: number;
+};
 ---
 
-<div class="stats stashadow border py-1 bg-base-300 border-none items-center">
-  <div class="stat px-4 py-0">
-    <div class="stat-title">本页访问量</div>
-    <div class="stat-value text-2xl">
-      <span>0</span>
-    </div>
-    <div class="stat-desc">
-      本月:
-      <span>0</span>
-    </div>
-  </div>
-  <div class="stat px-4 py-0">
-    <div class="stat-title">本站访问量</div>
-    <div class="stat-value text-2xl">
-      <span>0</span>
-    </div>
-    <div class="stat-desc">
-      本月:
-      <span>0</span>
-    </div>
-  </div>
-  <div class="stat px-4 py-0">
-    <div class="stat-title">本站访客数</div>
-    <div class="stat-value text-2xl">
-      <span>0</span>
-    </div>
-    <div class="stat-desc">
-      本月:
-      <span>0</span>
-    </div>
-  </div>
-</div>
+<VisitStatsUI
+  pageVisits={[result.PageVisits, result.MonthlyPageVisits]}
+  siteVisits={[result.SiteVisits, result.MonthlySiteVisits]}
+  siteVisitors={[result.SiteVisitors, result.MonthlySiteVisitors]}
+/>
