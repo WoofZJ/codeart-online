@@ -1,0 +1,11 @@
+DROP TABLE IF EXISTS Visits;
+CREATE TABLE IF NOT EXISTS Visits (
+    Id INTEGER PRIMARY KEY,
+    UserId VARCHAR(36) NOT NULL,
+    VisitTime INTEGER NOT NULL DEFAULT current_timestamp,
+    Origin VARCHAR(255) NOT NULL,
+    Pathname VARCHAR(255) NOT NULL,
+    Search VARCHAR(255),
+    Referer VARCHAR(255),
+    UserAgent VARCHAR(255) NOT NULL
+)
