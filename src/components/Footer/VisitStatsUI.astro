@@ -1,0 +1,53 @@
+---
+interface Props {
+  pageVisits?: number[];
+  siteVisits?: number[];
+  siteVisitors?: number[];
+}
+
+const props = Astro.props as Props;
+
+function displayCount(count?: number): string {
+  if (count === undefined || count < 0) {
+    return "--";
+  }
+
+  const digits = count.toString().length;
+  if (digits <= 3) {
+    return count.toString();
+  } else if (digits <= 6) {
+    return (count / 1_000).toFixed(6 - digits) + "K";
+  } else if (digits <= 9) {
+    return (count / 1_000_000).toFixed(9 - digits) + "M";
+  } else {
+    return (count / 1_000_000_000).toFixed(12 - digits) + "B";
+  }
+}
+
+const maps: Record<string, number[] | undefined> = {
+  本页访问量: props.pageVisits,
+  本站访问量: props.siteVisits,
+  本站访客数: props.siteVisitors,
+};
+---
+
+<div class="stats stashadow border py-1 bg-base-300 border-none items-center">
+  {
+    Object.entries(maps).map(([title, counts]) => (
+      <div class="stat px-4 py-0">
+        <div class="stat-title">{title}</div>
+        <div class="stat-value text-2xl">
+          <span class:list={{ "text-error": !counts }}>
+            {displayCount(counts && counts[0])}
+          </span>
+        </div>
+        <div class="stat-desc">
+          本月:
+          <span class:list={{ "text-error": !counts }}>
+            {displayCount(counts && counts[1])}
+          </span>
+        </div>
+      </div>
+    ))
+  }
+</div>
