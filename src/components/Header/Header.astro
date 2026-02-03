@@ -6,7 +6,7 @@ import ThemeSwitch from "./ThemeSwitch.astro";
 <div class="navbar bg-base-200 shadow-sm">
   <div class="navbar-start">
     <div class="dropdown">
-      <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
+      <div tabindex="0" role="button" class="btn btn-ghost lg:hidden px-2">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           class="h-5 w-5"
@@ -23,7 +23,7 @@ import ThemeSwitch from "./ThemeSwitch.astro";
       </div>
       <NavList dropdown={true} />
     </div>
-    <a href="/" class="btn btn-ghost text-xl">
+    <a href="/" class="btn btn-ghost text-xl px-2">
       <img class="h-full" src="/favicon.png" alt="logo" />
       <span> CodeArt.Online </span>
     </a>
@@ -31,8 +31,7 @@ import ThemeSwitch from "./ThemeSwitch.astro";
   <div class="navbar-center hidden lg:flex">
     <NavList />
   </div>
-  <div class="navbar-end">
+  <div class="navbar-end pr-2">
     <ThemeSwitch />
-    <a href="/login" class="btn ml-2">登录</a>
   </div>
 </div>
