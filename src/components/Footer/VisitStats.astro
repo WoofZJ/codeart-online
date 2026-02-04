@@ -8,16 +8,14 @@ const DB = Astro.locals.runtime.env.DB;
 
 // record visit
 const userId = getUserId(Astro.cookies);
-const origin = Astro.request.headers.get("Origin") || "";
-const url = new URL(Astro.request.url);
-const referer = Astro.request.headers.get("Referer") || "";
-const userAgent = Astro.request.headers.get("User-Agent") || "";
+const origin = Astro.request.headers.get("origin") || "";
+const url = new URL(Astro.request.headers.get("referer") || origin);
 
 await DB.prepare(
-  `INSERT INTO Visits (UserId, Origin, Pathname, Search, Referer, UserAgent)
-   VALUES (?, ?, ?, ?, ?, ?)`,
+  `INSERT INTO Visits (UserId, Origin, Pathname, Search)
+   VALUES (?, ?, ?, ?)`,
 )
-  .bind(userId, origin, url.pathname, url.search, referer, userAgent)
+  .bind(userId, origin, url.pathname, url.search)
   .run();
 
 // get visit stats
