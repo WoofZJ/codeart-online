@@ -2,8 +2,8 @@
   {
     ["年", "天", "时", "分", "秒"].map((label) => (
       <div class="bg-neutral rounded-box text-neutral-content flex flex-col p-2">
-        <span class="countdown font-mono text-3xl">
-          <span style={`--value:0; --digits:${label == "天" ? 3 : 2};`} />
+        <span class="counter leading-6 font-mono text-3xl">
+          {label === "天" ? "000" : "00"}
         </span>
         {label}
       </div>
@@ -19,30 +19,16 @@
   let days = Math.floor(hours / 24);
   let years = Math.floor(days / 365);
   [secs, mins, hours, days] = [secs % 60, mins % 60, hours % 24, days % 365];
-  const updateCountdown = () => {
-    document.querySelectorAll(".countdown > span").forEach((el, index) => {
-      const element = el as HTMLElement;
-      let value = 0;
-      switch (index) {
-        case 0:
-          value = years;
-          break;
-        case 1:
-          value = days;
-          break;
-        case 2:
-          value = hours;
-          break;
-        case 3:
-          value = mins;
-          break;
-        case 4:
-          value = secs;
-          break;
-      }
-      element.style.setProperty("--value", value.toString());
-    });
-  };
+  const counterElements = document.querySelectorAll(
+    ".counter",
+  ) as NodeListOf<HTMLSpanElement>;
+  function updateCountdown() {
+    counterElements[0].innerText = years.toString().padStart(2, "0");
+    counterElements[1].innerText = days.toString().padStart(3, "0");
+    counterElements[2].innerText = hours.toString().padStart(2, "0");
+    counterElements[3].innerText = mins.toString().padStart(2, "0");
+    counterElements[4].innerText = secs.toString().padStart(2, "0");
+  }
   updateCountdown();
   setInterval(() => {
     secs += 1;
