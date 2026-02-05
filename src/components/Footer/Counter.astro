@@ -12,42 +12,25 @@
 </div>
 <script>
   const launchDate = new Date("2025-07-05");
-  const milliseconds = Date.now() - launchDate.getTime();
-  let secs = Math.floor(milliseconds / 1000);
-  let mins = Math.floor(secs / 60);
-  let hours = Math.floor(mins / 60);
-  let days = Math.floor(hours / 24);
-  let years = Math.floor(days / 365);
-  [secs, mins, hours, days] = [secs % 60, mins % 60, hours % 24, days % 365];
   const counterElements = document.querySelectorAll(
     ".counter",
   ) as NodeListOf<HTMLSpanElement>;
-  function updateCountdown() {
+  function updateCounter() {
+    const milliseconds = Date.now() - launchDate.getTime();
+    let secs = Math.floor(milliseconds / 1000);
+    let mins = Math.floor(secs / 60);
+    let hours = Math.floor(mins / 60);
+    let days = Math.floor(hours / 24);
+    let years = Math.floor(days / 365);
+    [secs, mins, hours, days] = [secs % 60, mins % 60, hours % 24, days % 365];
     counterElements[0].innerText = years.toString().padStart(2, "0");
     counterElements[1].innerText = days.toString().padStart(3, "0");
     counterElements[2].innerText = hours.toString().padStart(2, "0");
     counterElements[3].innerText = mins.toString().padStart(2, "0");
     counterElements[4].innerText = secs.toString().padStart(2, "0");
   }
-  updateCountdown();
+  updateCounter();
   setInterval(() => {
-    secs += 1;
-    if (secs >= 60) {
-      secs = 0;
-      mins += 1;
-      if (mins >= 60) {
-        mins = 0;
-        hours += 1;
-        if (hours >= 24) {
-          hours = 0;
-          days += 1;
-        }
-        if (days >= 365) {
-          days = 0;
-          years += 1;
-        }
-      }
-    }
-    updateCountdown();
+    updateCounter();
   }, 1000);
 </script>
