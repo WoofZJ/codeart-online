@@ -5,5 +5,7 @@ CREATE TABLE IF NOT EXISTS Visits (
     VisitTime INTEGER NOT NULL DEFAULT current_timestamp,
     Origin VARCHAR(255) NOT NULL,
     Pathname VARCHAR(255) NOT NULL,
-    Search VARCHAR(255)
+    Search VARCHAR(255),
+    Referer VARCHAR(255),
+    UserAgent VARCHAR(511)
 )
