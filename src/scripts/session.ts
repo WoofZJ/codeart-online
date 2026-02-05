@@ -1,10 +1,8 @@
-import type { AstroCookies } from "astro"
-
-export function getUserId(cookies: AstroCookies): string {
-  let userId = cookies.get("user_id")?.value;
+export function getUserId(): string {
+  let userId = localStorage.getItem("user_id");
   if (!userId) {
     userId = crypto.randomUUID();
-    cookies.set("user_id", userId);
+    localStorage.setItem("user_id", userId);
   }
   return userId;
 }

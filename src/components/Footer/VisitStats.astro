@@ -1,56 +1,57 @@
----
-export const prerender = false;
+<div class="stats stashadow border py-1 bg-base-300 border-none items-center">
+  {
+    ["本页访问量", "本站访问量", "本站访客数"].map((title) => (
+      <div class="stat px-4 py-0">
+        <div class="stat-title">{title}</div>
+        <div class="stat-value text-2xl">
+          <span class="visit-stats text-error">--</span>
+        </div>
+        <div class="stat-desc">
+          本月:
+          <span class="visit-stats text-error">--</span>
+        </div>
+      </div>
+    ))
+  }
+</div>
 
-import VisitStatsUI from "./VisitStatsUI.astro";
-import { getUserId } from "../../scripts/session";
+<script>
+  import { actions } from "astro:actions";
+  import { getUserId } from "../../scripts/session.ts";
 
-const DB = Astro.locals.runtime.env.DB;
+  function displayCount(count?: number): string {
+    if (count === undefined || count < 0) {
+      return "--";
+    }
 
-// record visit
-const userId = getUserId(Astro.cookies);
-const origin = Astro.request.headers.get("origin") || "";
-const url = new URL(Astro.request.headers.get("referer") || origin);
+    const digits = count.toString().length;
+    if (digits <= 3) {
+      return count.toString();
+    } else if (digits <= 6) {
+      return (count / 1_000).toFixed(6 - digits) + "K";
+    } else if (digits <= 9) {
+      return (count / 1_000_000).toFixed(9 - digits) + "M";
+    } else {
+      return (count / 1_000_000_000).toFixed(12 - digits) + "B";
+    }
+  }
 
-await DB.prepare(
-  `INSERT INTO Visits (UserId, Origin, Pathname, Search)
-   VALUES (?, ?, ?, ?)`,
-)
-  .bind(userId, origin, url.pathname, url.search)
-  .run();
+  await actions.visit.record({
+    userId: getUserId(),
+    url: window.location.href,
+    referer: document.referrer,
+    userAgent: navigator.userAgent,
+  });
 
-// get visit stats
-const thisMonth =
-  new Date(new Date().getFullYear(), new Date().getMonth(), 1).getTime() / 1000;
-
-const result = (await DB.prepare(
-  `SELECT
-     (SELECT COUNT(*) FROM Visits WHERE Pathname = ?) AS PageVisits,
-     (SELECT COUNT(*) FROM Visits
-        WHERE Pathname = ? AND VisitTime >= ?
-     ) AS MonthlyPageVisits,
-     (SELECT COUNT(*) FROM Visits) AS SiteVisits,
-     (SELECT COUNT(*) FROM Visits
-        WHERE VisitTime >= ?
-     ) AS MonthlySiteVisits,
-     (SELECT COUNT(DISTINCT UserId) FROM Visits) AS SiteVisitors,
-     (SELECT COUNT(DISTINCT UserId) FROM Visits
-        WHERE VisitTime >= ?
-     ) AS MonthlySiteVisitors
-   `,
-)
-  .bind(url.pathname, url.pathname, thisMonth, thisMonth, thisMonth)
-  .first()) as {
-  PageVisits: number;
-  MonthlyPageVisits: number;
-  SiteVisits: number;
-  MonthlySiteVisits: number;
-  SiteVisitors: number;
-  MonthlySiteVisitors: number;
-};
----
-
-<VisitStatsUI
-  pageVisits={[result.PageVisits, result.MonthlyPageVisits]}
-  siteVisits={[result.SiteVisits, result.MonthlySiteVisits]}
-  siteVisitors={[result.SiteVisitors, result.MonthlySiteVisitors]}
-/>
+  const response = await actions.visit.getStats({
+    pathname: window.location.pathname,
+  });
+  const data = response.data;
+  if (data) {
+    const statElements = document.querySelectorAll(".visit-stats");
+    statElements.forEach((el, index) => {
+      el.textContent = displayCount(data[index]);
+      el.classList.remove("text-error");
+    });
+  }
+</script>
