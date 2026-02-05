@@ -11,7 +11,7 @@ const { title } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="zh-Hans" data-theme="cupcake">
+<html lang="zh-CN" data-theme="cupcake">
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
@@ -19,10 +19,14 @@ const { title } = Astro.props;
 		<meta name="generator" content={Astro.generator} />
 		<title>CodeArt.Online - {title}</title>
 		<script is:inline>
-			const theme = localStorage.getItem("theme");
-			if (theme) {
-				document.documentElement.setAttribute("data-theme", theme);
+			let savedTheme = localStorage.getItem("theme");
+			if (!savedTheme) {
+				savedTheme = window.matchMedia("(prefers-color-scheme: dark)").matches
+					? "dark"
+					: "cupcake";
+				localStorage.setItem("theme", savedTheme);
 			}
+			document.documentElement.setAttribute("data-theme", savedTheme);
 		</script>
 	</head>
 	<body class="container min-h-dvh flex flex-col mx-auto gap-4">
