@@ -22,40 +22,28 @@ interface Props {
 const { dropdown = false } = Astro.props;
 ---
 
-{
-  !dropdown && (
-    <ul class="menu text-base py-0 menu-horizontal px-1">
-      {links.map((link) => (
-        <li>
-          <a
-            href={link.url}
-            class:list={{ "text-error": link.url === Astro.url.pathname }}
-          >
-            <Icon size="20" name={link.icon} />
-            {link.title}
-          </a>
-        </li>
-      ))}
-    </ul>
-  )
-}
-{
-  dropdown && (
-    <ul
-      tabindex="-1"
-      class="menu dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
-    >
-      {links.map((link) => (
-        <li>
-          <a
-            href={link.url}
-            class:list={{ "text-error": link.url === Astro.url.pathname }}
-          >
-            <Icon size="20" name={link.icon} />
-            {link.title}
-          </a>
-        </li>
-      ))}
-    </ul>
-  )
-}
+<ul
+  class:list={{
+    "menu text-base py-0 menu-horizontal px-1": !dropdown,
+    "menu dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow":
+      dropdown,
+  }}
+>
+  {
+    links.map((link) => (
+      <li>
+        <a
+          href={link.url}
+          class:list={{
+            "text-error":
+              link.url === Astro.url.pathname ||
+              link.url + "/" === Astro.url.pathname,
+          }}
+        >
+          <Icon size="20" name={link.icon} />
+          {link.title}
+        </a>
+      </li>
+    ))
+  }
+</ul>
