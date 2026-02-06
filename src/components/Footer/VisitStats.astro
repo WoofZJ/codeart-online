@@ -17,7 +17,6 @@
 
 <script>
   import { actions } from "astro:actions";
-  import { getUserId } from "../../scripts/session.ts";
 
   function displayCount(count?: number): string {
     if (count === undefined || count < 0) {
@@ -37,7 +36,6 @@
   }
 
   await actions.visit.record({
-    userId: getUserId(),
     url: window.location.href,
     referer: document.referrer,
     userAgent: navigator.userAgent,

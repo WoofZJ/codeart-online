@@ -1,10 +1,10 @@
 import { defineAction } from 'astro:actions';
 import { z } from 'astro/zod';
+import { getUserId } from './session';
 
 export const visit = {
   record: defineAction({
     input: z.object({
-      userId: z.string(),
       url: z.string(),
       referer: z.string().optional(),
       userAgent: z.string().optional(),
@@ -13,7 +13,7 @@ export const visit = {
       const url = new URL(input.url);
       const DB = context.locals.runtime.env.DB;
       await DB.prepare('INSERT INTO Visits (UserId, Origin, Pathname, Search, Referer, UserAgent) VALUES (?, ?, ?, ?, ?, ?)')
-        .bind(input.userId, url.origin, url.pathname, url.search, input.referer, input.userAgent)
+        .bind(getUserId(context), url.origin, url.pathname, url.search, input.referer, input.userAgent)
         .run();
       return {};
     }
