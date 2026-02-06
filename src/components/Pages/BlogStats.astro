@@ -1,0 +1,104 @@
+---
+import { Icon } from "astro-icon/components";
+
+interface BlogStat {
+  name: string;
+  icon: string;
+  unit: string;
+  url: string;
+}
+
+const blogStats: BlogStat[] = [
+  {
+    name: "文章",
+    icon: "tabler:article",
+    unit: "篇",
+    url: "/archives",
+  },
+  {
+    name: "外链",
+    icon: "tabler:link",
+    unit: "个",
+    url: "/links",
+  },
+  {
+    name: "留言",
+    icon: "tabler:messages",
+    unit: "条",
+    url: "/messages",
+  },
+];
+---
+
+<div class="stats-vertical shadow bg-base-200 w-full">
+  {
+    blogStats.map((item) => (
+      <a
+        class="blog-stats stat hover:bg-base-300 hover:text-error px-8 sm:px-24 md:px-40 lg:px-6 xl:px-12"
+        href={item.url}
+      >
+        <div class="stat-figure">
+          <Icon name={item.icon} size="32" />
+        </div>
+        <div class="stat-title text-sm">{item.name}</div>
+        <div class="stat-value">
+          <span class="text-error">--</span>
+          <span class="font-normal text-xl">{item.unit}</span>
+        </div>
+        <div class="stat-desc text-wrap" />
+      </a>
+    ))
+  }
+</div>
+
+<script>
+  import { actions } from "astro:actions";
+  const blogStats = (await actions.blog.getStats()).data;
+  const linkStats = (await actions.link.getStats()).data;
+  const messageStats = (await actions.message.getStats()).data;
+  const values = document.querySelectorAll(".blog-stats .stat-value span");
+  const descs = document.querySelectorAll(".blog-stats .stat-desc");
+  if (blogStats) {
+    values[0].textContent = blogStats.total.toString();
+    values[0].classList.remove("text-error");
+    let html = "本月 |";
+    if (blogStats.createdThisMonth > 0) {
+      html += `<span class="text-success"> 新增 <span class="font-bold"> ${blogStats.createdThisMonth} </span> 篇 </span>|`;
+    }
+    if (blogStats.updatedThisMonth > 0) {
+      html += `<span class="text-info"> 更新 <span class="font-bold"> ${blogStats.updatedThisMonth} </span> 篇 </span>|`;
+    }
+    if (blogStats.createdThisMonth === 0 && blogStats.updatedThisMonth === 0) {
+      html += `<span class=text-error> 暂无产出 | </span>`;
+    }
+    descs[0].innerHTML = html;
+  }
+  if (linkStats) {
+    values[2].textContent = linkStats.total.toString();
+    values[2].classList.remove("text-error");
+    let html = "|";
+    if (linkStats.friends > 0) {
+      html += ` 友链 <span class="font-bold"> ${linkStats.friends} </span> 个 |`;
+    }
+    if (linkStats.tools > 0) {
+      html += ` 工具 <span class="font-bold"> ${linkStats.tools} </span> 个 |`;
+    }
+    if (linkStats.total > 0) {
+      descs[1].innerHTML = html;
+    }
+  }
+  if (messageStats) {
+    values[4].textContent = messageStats.total.toString();
+    values[4].classList.remove("text-error");
+    let html = "|";
+    if (messageStats.comments > 0) {
+      html += ` 评论 <span class="font-bold"> ${messageStats.comments} </span> 条 |`;
+    }
+    if (messageStats.messages > 0) {
+      html += ` 互动 <span class="font-bold"> ${messageStats.messages} </span> 条 |`;
+    }
+    if (messageStats.total > 0) {
+      descs[2].innerHTML = html;
+    }
+  }
+</script>
